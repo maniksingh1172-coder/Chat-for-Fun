@@ -1,0 +1,12 @@
+Copyright (c) 2026 MANIK SINGH
+
+All Rights Reserved.
+
+The "Chat for Fun" software, including all code, graphics, and assets, 
+is the exclusive property of MANIK SINGH. 
+
+No part of this software may be copied, modified, distributed, sold, 
+or used by any other person or entity for any purpose without the 
+express written permission of the owner.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
