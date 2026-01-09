@@ -17,13 +17,6 @@
         .main-logo { width: 100px; height: 100px; background: linear-gradient(135deg, #4facfe, #00f2fe); border-radius: 28px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 35px rgba(79, 172, 254, 0.4); border: 2px solid rgba(255,255,255,0.2); animation: logoFloat 4s ease-in-out infinite; }
         @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        #v-chat {
-    height: 100dvh; /* 'dvh' ensures the height stays correct even when the mobile address bar hides/shows */
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    margin: 0;
-}
         .view {
     transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s ease;
     will-change: transform, opacity; /* This tells the phone to use hardware acceleration */
