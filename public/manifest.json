@@ -1,17 +1,16 @@
 {
-  "name": "Chat for Fun",
-  "short_name": "Chat4Fun",
-  "description": "Professional Anonymous Harmony Hub",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#0b1120",
-  "theme_color": "#4facfe",
+  "short_name": "ChatFun",
+  "name": "Chat for Fun Premium",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2593/2593635.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "start_url": "/",
+  "background_color": "#0b1120",
+  "display": "standalone",
+  "theme_color": "#4facfe"
 }
