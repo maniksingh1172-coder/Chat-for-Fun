@@ -1,0 +1,12 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="120" fill="url(#paint0_linear)"/>
+  <path d="M150 180C150 163.431 163.431 150 180 150H332C348.569 150 362 163.431 362 180V280C362 296.569 348.569 310 332 310H230L170 360V310H150V180Z" fill="white"/>
+  <circle cx="360" cy="160" r="40" fill="#FFD700">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite" />
+  </circle>
+  <defs>
+    <linearGradient id="paint0_linear" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4facfe"/><stop offset="1" stop-color="#00f2fe"/>
+    </linearGradient>
+  </defs>
+</svg>
