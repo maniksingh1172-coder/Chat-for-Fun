@@ -1,60 +1,64 @@
-
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    maxHttpBufferSize: 1e7 // Increased to 10MB to handle high-quality images
+});
 
-app.use(express.static('public')); // Critical for serving index.html
+app.use(express.static('public'));
 
-let queue = [];
+let strangerQueue = [];
 
 io.on('connection', (socket) => {
-    socket.on('join-queue', (profile) => {
+    // Stranger Logic
+    socket.on('find-stranger', (profile) => {
         socket.profile = profile;
-        if (queue.length > 0) {
-            let partner = queue.pop();
-            let room = `room_${socket.id}_${partner.id}`;
-            socket.join(room);
-            partner.join(room);
-            socket.room = room;
-            partner.room = room;
+        strangerQueue = strangerQueue.filter(s => s.id !== socket.id);
+        if (strangerQueue.length > 0) {
+            let partner = strangerQueue.pop();
+            let room = `stranger_${socket.id}_${partner.id}`;
+            socket.join(room); partner.join(room);
+            socket.room = room; partner.room = room;
+            io.to(room).emit('user-connected', { partner: socket.profile }); 
+            io.to(room).emit('user-connected', { partner: partner.profile });
+        } else { strangerQueue.push(socket); }
+    });
 
-            io.to(socket.id).emit('match-found', partner.profile);
-            io.to(partner.id).emit('match-found', socket.profile);
-            // Inside io.on('connection', (socket) => { ... })
+    // Multi-User Private Room Logic
+    socket.on('join-room', ({ roomID, profile }) => {
+        socket.profile = profile;
+        socket.room = roomID;
+        socket.join(roomID);
+        io.to(roomID).emit('user-connected', { partner: profile });
+    });
 
-// Relay Typing Status
-socket.on('typing', (isTyping) => {
-    if (socket.room) {
-        socket.to(socket.room).emit('typing', isTyping);
-    }
-});
+    // Unified Message & Media Relay
+    socket.on('chat-msg', (data) => {
+        if (socket.room) socket.to(socket.room).emit('chat-msg', data);
+    });
 
-// Relay Multimedia Data (Images or Voice)
-socket.on('media-msg', (data) => {
-    if (socket.room) {
-        socket.to(socket.room).emit('media-msg', data);
-    }
-});
-        } else {
-            queue.push(socket);
+    socket.on('media-msg', (data) => {
+        if (socket.room) {
+            // Sends the image to everyone else in the room
+            socket.to(socket.room).emit('media-msg', { sender: socket.profile.name, ...data }); 
         }
     });
 
-    socket.on('chat-msg', (msg) => {
+    socket.on('leave-chat', () => {
         if (socket.room) {
-            socket.to(socket.room).emit('chat-msg', msg);
+            socket.to(socket.room).emit('user-left', socket.profile?.name);
+            socket.leave(socket.room);
+            socket.room = null;
         }
     });
 
     socket.on('disconnect', () => {
-        queue = queue.filter(s => s.id !== socket.id);
+        strangerQueue = strangerQueue.filter(s => s.id !== socket.id);
     });
 });
 
-const PORT = process.env.PORT || 3000; // Required for Render deployment
-server.listen(PORT, () => console.log(`Server live on port ${PORT}`));
-
+const PORT = process.env.PORT || 10000;
+server.listen(PORT, () => console.log(`Premium Image-Ready Server on ${PORT}`));
