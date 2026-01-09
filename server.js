@@ -1,13 +1,13 @@
+
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import path from 'path';
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-app.use(express.static('public')); // Serves all your front-end files
+app.use(express.static('public')); // Critical for serving index.html
 
 let queue = [];
 
@@ -40,5 +40,5 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = process.env.PORT || 3000; // Handles Render deployment
+const PORT = process.env.PORT || 3000; // Required for Render deployment
 server.listen(PORT, () => console.log(`Server live on port ${PORT}`));
