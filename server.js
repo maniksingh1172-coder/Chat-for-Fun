@@ -24,6 +24,21 @@ io.on('connection', (socket) => {
 
             io.to(socket.id).emit('match-found', partner.profile);
             io.to(partner.id).emit('match-found', socket.profile);
+            // Inside io.on('connection', (socket) => { ... })
+
+// Relay Typing Status
+socket.on('typing', (isTyping) => {
+    if (socket.room) {
+        socket.to(socket.room).emit('typing', isTyping);
+    }
+});
+
+// Relay Multimedia Data (Images or Voice)
+socket.on('media-msg', (data) => {
+    if (socket.room) {
+        socket.to(socket.room).emit('media-msg', data);
+    }
+});
         } else {
             queue.push(socket);
         }
@@ -42,3 +57,4 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000; // Required for Render deployment
 server.listen(PORT, () => console.log(`Server live on port ${PORT}`));
+
