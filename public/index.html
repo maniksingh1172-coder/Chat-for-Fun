@@ -8,23 +8,28 @@
         :root { --accent: #4facfe; --bg: #0b1120; --glass: rgba(255, 255, 255, 0.05); }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: #fff; margin: 0; overflow: hidden; height: 100dvh; }
         
-        /* Smooth Transitions */
+        /* Attractive Landing Background */
+        body::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(79,172,254,0.1) 0%, transparent 60%); z-index: -1; animation: rotate 20s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
         .view { height: 100dvh; width: 100vw; position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s ease; will-change: transform, opacity; }
-        .hidden { transform: translateY(30px) scale(0.95); opacity: 0; pointer-events: none; }
+        .hidden { transform: translateY(40px) scale(0.92); opacity: 0; pointer-events: none; }
 
-        /* Modern Landing Page */
-        .glass { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 35px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .logo-glow { width: 80px; height: 80px; background: linear-gradient(135deg, #4facfe, #00f2fe); border-radius: 22px; margin: 0 auto 20px; box-shadow: 0 0 30px rgba(79, 172, 254, 0.5); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; animation: float 4s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .glass { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 40px; width: 92%; max-width: 420px; text-align: center; }
+        .logo-box { width: 90px; height: 90px; background: linear-gradient(135deg, #4facfe, #00f2fe); border-radius: 24px; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 3rem; box-shadow: 0 0 40px rgba(79, 172, 254, 0.4); animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        /* Profile Page Improvements */
-        .input-group { margin-bottom: 20px; width: 100%; text-align: left; }
-        input, select, textarea { width: 100%; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-size: 16px; box-sizing: border-box; }
-        
-        /* Chat Styling */
-        #chat-win { flex: 1; width: 100%; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; }
-        .msg { padding: 12px 18px; border-radius: 18px; max-width: 80%; line-height: 1.4; }
-        .me { background: var(--accent); color: #000; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500; }
+        /* Increased Profile Spacing */
+        .input-group { margin-bottom: 25px; width: 100%; }
+        input, select, textarea { width: 100%; padding: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; color: white; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--accent); background: rgba(255,255,255,0.1); }
+
+        /* Icebreaker Feature */
+        #ice-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--accent); color: var(--accent); padding: 8px 15px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; margin-bottom: 10px; }
+
+        #chat-win { flex: 1; width: 100%; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; -webkit-overflow-scrolling: touch; }
+        .msg { padding: 14px 20px; border-radius: 20px; max-width: 80%; }
+        .me { background: var(--accent); color: #000; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 600; }
         .stranger { background: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; }
     </style>
 </head>
@@ -32,32 +37,35 @@
 
     <div id="v-land" class="view">
         <div class="glass">
-            <div class="logo-glow">✨</div>
-            <h1 style="margin:0; font-size: 2.2rem;">Chat <span style="color:var(--accent)">Fun</span></h1>
-            <p style="color:#94a3b8; margin: 15px 0 30px;">Harmony-focused connection.</p>
-            <button onclick="move('v-set')" style="width:100%; padding:18px; border:none; border-radius:15px; background:var(--accent); font-weight:bold; cursor:pointer;">Start Now</button>
+            <div class="logo-box">✨</div>
+            <h1 style="margin:0; font-size: 2.5rem; letter-spacing: -1px;">Chat <span style="color:var(--accent)">Fun</span></h1>
+            <p style="color:#94a3b8; margin: 10px 0 35px; font-size: 1.1rem;">Premium Harmony Connections</p>
+            <button onclick="move('v-set')" style="width:100%; padding:20px; border:none; border-radius:18px; background:var(--accent); font-weight:bold; cursor:pointer; font-size: 1.1rem;">Get Started</button>
         </div>
     </div>
 
     <div id="v-set" class="view hidden">
         <div class="glass">
-            <h2 style="margin-top:0">Your Profile</h2>
-            <div class="input-group"><input id="in-n" placeholder="Alias Name"></div>
-            <div class="input-group" style="display:flex; gap:10px;">
+            <h2 style="margin-top:0">Build Profile</h2>
+            <div class="input-group"><input id="in-n" placeholder="Nickname"></div>
+            <div class="input-group" style="display:flex; gap:15px;">
                 <input id="in-a" type="number" placeholder="Age" style="flex:1;">
                 <select id="in-g" style="flex:1;"><option disabled selected>Gender</option><option>Male</option><option>Female</option></select>
             </div>
-            <div class="input-group"><input id="in-c" placeholder="City"></div>
-            <div class="input-group"><textarea id="in-b" placeholder="A short bio..."></textarea></div>
-            <button onclick="startChat()" style="width:100%; padding:18px; border:none; border-radius:15px; background:var(--accent); font-weight:bold; cursor:pointer;">Find a Partner</button>
+            <div class="input-group"><input id="in-c" placeholder="City Name"></div>
+            <div class="input-group"><textarea id="in-b" placeholder="Bio: What makes you happy?"></textarea></div>
+            <button onclick="startChat()" style="width:100%; padding:20px; border:none; border-radius:18px; background:var(--accent); font-weight:bold; cursor:pointer;">Enter Chat</button>
         </div>
     </div>
 
     <div id="v-chat" class="view hidden">
         <div id="chat-win"></div>
-        <div style="padding:15px; width:100%; display:flex; gap:10px; background:#0f172a;">
-            <input id="m-in" placeholder="Say something..." style="flex:1;">
-            <button onclick="send()" style="background:var(--accent); border:none; padding:0 25px; border-radius:12px; font-weight:bold;">Send</button>
+        <div style="padding:15px; width:100%; background:#0f172a; border-top: 1px solid rgba(255,255,255,0.05);">
+            <center><button id="ice-btn" onclick="getTopic()">💡 Stuck? Try a Topic</button></center>
+            <div style="display:flex; gap:12px;">
+                <input id="m-in" placeholder="Type a message..." style="flex:1;">
+                <button onclick="send()" style="background:var(--accent); border:none; padding:0 30px; border-radius:14px; font-weight:bold; cursor:pointer;">Send</button>
+            </div>
         </div>
     </div>
 
@@ -66,6 +74,19 @@
         const socket = io();
         const move = (id) => { document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
         
+        const topics = [
+            "If you could travel anywhere tomorrow, where would it be?",
+            "What is your most used emoji?",
+            "Would you rather speak 10 languages or play 10 instruments?",
+            "What's your favorite dad joke?",
+            "What's a surprising thing on your bucket list?"
+        ];
+
+        function getTopic() {
+            const random = topics[Math.floor(Math.random() * topics.length)];
+            alert("Icebreaker: " + random);
+        }
+
         function startChat() {
             const p = { name: document.getElementById('in-n').value, age: document.getElementById('in-a').value, gender: document.getElementById('in-g').value, city: document.getElementById('in-c').value, bio: document.getElementById('in-b').value };
             if(!p.name || !p.age) return alert("Fill required fields!");
@@ -82,7 +103,7 @@
             if(i.value) { socket.emit('chat-msg', i.value); addMsg(i.value, 'me'); i.value = ''; }
         }
 
-        socket.on('match-found', (p) => addMsg(`Connected to ${p.name} from ${p.city}`, 'stranger'));
+        socket.on('match-found', (p) => addMsg(`Connected with ${p.name} from ${p.city}. Say hi!`, 'stranger'));
         socket.on('chat-msg', (m) => addMsg(m, 'stranger'));
     </script>
 </body>
