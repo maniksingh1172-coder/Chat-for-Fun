@@ -1,69 +1,44 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import path from 'path';
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server, { 
-    maxHttpBufferSize: 1e8 // Support for audio and image relaying
-}); 
+const io = new Server(server);
 
-app.use(express.static('public'));
+app.use(express.static('public')); // Serves all your front-end files
 
-let waitingUser = null;
-const bannedIPs = new Set();
-const reportCounts = new Map();
+let queue = [];
 
 io.on('connection', (socket) => {
-    const userIP = socket.handshake.address;
-    if (bannedIPs.has(userIP)) return socket.disconnect();
-
     socket.on('join-queue', (profile) => {
-        socket.profile = profile; 
-        if (waitingUser && waitingUser.id !== socket.id) {
-            const partner = waitingUser;
-            const room = `room_${socket.id}_${partner.id}`;
-            socket.join(room); partner.join(room);
-            socket.room = room; partner.room = room;
-            
-            socket.emit('match-found', partner.profile);
-            partner.emit('match-found', socket.profile);
-            waitingUser = null;
+        socket.profile = profile;
+        if (queue.length > 0) {
+            let partner = queue.pop();
+            let room = `room_${socket.id}_${partner.id}`;
+            socket.join(room);
+            partner.join(room);
+            socket.room = room;
+            partner.room = room;
+
+            io.to(socket.id).emit('match-found', partner.profile);
+            io.to(partner.id).emit('match-found', socket.profile);
         } else {
-            waitingUser = socket;
+            queue.push(socket);
         }
     });
 
-    socket.on('chat-msg', (data) => {
-        if (socket.room) socket.to(socket.room).emit('chat-msg', data);
-    });
-
-    socket.on('leave-room', () => {
+    socket.on('chat-msg', (msg) => {
         if (socket.room) {
-            socket.to(socket.room).emit('system-msg', `${socket.profile?.name || 'Partner'} has left.`);
-            socket.leave(socket.room);
-            socket.room = null;
-        }
-    });
-
-    socket.on('report-partner', () => {
-        if (socket.room) {
-            const pId = socket.room.split('_').find(id => id !== socket.id && id !== 'room');
-            let count = (reportCounts.get(pId) || 0) + 1;
-            reportCounts.set(pId, count);
-            if (count >= 3) bannedIPs.add(userIP); 
-            io.to(socket.room).emit('system-msg', '⚠️ Connection closed due to report.');
-            io.in(socket.room).socketsLeave(socket.room);
+            socket.to(socket.room).emit('chat-msg', msg);
         }
     });
 
     socket.on('disconnect', () => {
-        if (waitingUser?.id === socket.id) waitingUser = null;
-        if (socket.room) socket.to(socket.room).emit('system-msg', `${socket.profile?.name || 'Partner'} has left.`);
+        queue = queue.filter(s => s.id !== socket.id);
     });
 });
 
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
+const PORT = process.env.PORT || 3000; // Handles Render deployment
+server.listen(PORT, () => console.log(`Server live on port ${PORT}`));
